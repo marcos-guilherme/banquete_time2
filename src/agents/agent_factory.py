@@ -1,4 +1,4 @@
-from .agentes import extracaoProcedimentos
+from .agentes import extracaoProcedimentos, decodificacao
 
 class AgentFactory:
     
@@ -10,7 +10,7 @@ class AgentFactory:
     def obter_agente(tipo_agente: str):
         agentes = {
             "extracao_procedimentos": extracaoProcedimentos,
-            "StringParaObterAgente": "FunçãoDoAgente"
+            "fazer_decodificacao": decodificacao
         }
         
         if tipo_agente not in agentes:

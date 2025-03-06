@@ -1,7 +1,14 @@
 from .agente_base import AgenteBase
 from langchain.chat_models import init_chat_model
-from prompt_info import prompt_template_procedimentos
-from schemas import ProcedimentosExtraidos
+from prompt_info import prompt_template_procedimentos, prompt_decodificacao
+from schemas.modelos_para_agentes import ResumoProcedimento, decodificacao
+from langchain_openai import ChatOpenAI
+import dotenv
+import os
+
+dotenv.load_dotenv()
+open_ai_key = os.getenv("OPENAI_API_KEY")
+
 
 """
 Aqui os agentes devem ser implementados. Cada agente deve herdar da classe AgenteBase e implementar o método Analisar.
@@ -12,16 +19,25 @@ Permite definirmos a logica de cada agente de forma isolada, facilitando a manut
 class extracaoProcedimentos(AgenteBase):
     """Executar ação de extração de procedimentos"""
     def __init__(self):
-        self.llm = init_chat_model("gpt-4-turbo", model_provider="openai")
+        self.llm = ChatOpenAI(openai_api_key=open_ai_key, model="gpt-4o-mini")
         
-    def Analisar(self, texto):
-        self.prompt = prompt_template_procedimentos.invoke({"text": texto}) #Extrair o template (system prompt) para o caso específico. (Podem ser definidos em prompt info).
-        self.structured_llm = self.llm.with_structured_output(schema=ProcedimentosExtraidos) #Não esqueça de criar um "esquema" em schemas.py e adicionsá-lo aqui.
-        return self.structured_llm.invoke(self.prompt)
-    
-class JamesBond(AgenteBase):
-    """Agente secreto"""
+    def Analisar(self, text):
+        self.prompt = prompt_template_procedimentos.invoke({'text': text}) #Extrair o template (system prompt) para o caso específico. (Podem ser definidos em prompt info).
+        self.structured_llm = self.llm.with_structured_output(schema=ResumoProcedimento)
+        self.resultado = self.structured_llm.invoke(self.prompt)
+        
+        return self.resultado.model_dump()
+
+
+
+class decodificacao(AgenteBase):
     def __init__(self):
-        pass
-    def Analisar(self, texto):
-        return "James Bond"
+        self.llm = ChatOpenAI(openai_api_key=open_ai_key, model="gpt-4o-mini")
+        
+    def Analisar(self, text):
+        self.prompt = prompt_decodificacao.invoke({"text": text}) #Extrair o template (system prompt) para o caso específico. (Podem ser definidos em prompt info).
+        structured_llm = self.llm.with_structured_output(schema=decodificacao)
+        self.resultado = structured_llm.invoke(self.prompt)
+        
+        return self.resultado.model_dump()
+        
