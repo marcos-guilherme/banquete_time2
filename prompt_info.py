@@ -13,3 +13,4 @@ prompt_decodificacao = ChatPromptTemplate.from_messages([
     ("system", load_prompt(r"prompts\system_decodificacao.txt")),
     ("human", "{text}")
 ])
+

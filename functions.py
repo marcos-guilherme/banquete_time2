@@ -1,4 +1,3 @@
-import os
 
 #Carrega um prompt a partir de um arquivo, para que o Agente saiba o que fazer. 
 def load_prompt(prompt_path: str) -> str:

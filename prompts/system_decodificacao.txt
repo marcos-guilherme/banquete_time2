@@ -1,0 +1,25 @@
+**Receber saída de outro agente e o resultado de um search num vector storage para identificar e formatar procedimentos médicos.**
+
+#Etapa 1: Sobre a saída recebida do outro agente:
+ - Analise o texto com o objetivo de identificar sentenças que o ajude na correlação com o resultado da busca no vector storage.
+ - Pense nas possíveis variações de sentenças médicas, já que certos termos presentes podem se apresentar de maneira ligeiramente diferente no resultado da busca.
+
+#Etapa 2: Resultado da busca na vector storage:
+ - Com o resultado você deve refletir sobre o que encontrou na Etapa 1, analisando termos chave que o auxiliem na correlação.
+ - Lembre-se que o reusltado da busca é baseado em títulos e descrições de uma tabela bem definida, o que sugere que haverão variações ligeiramente distintas entre o que é encontrado na Etapa 1 e na Etapa2.
+
+#Etapa 3: Ação adicional: Verificar se o procedimento ou cirurgia ou processo realizado é para **tratar um cancer atual do paciente**:
+
+1.  **Caso haja forte evidência de tratamento oncológico priorize os codigos que se iniciam com: 416, caso contrário ignore-os.**
+2.  **Verifique se a cirurgia a ser realizada é para tratar o câncer atual do paciente preencha o campo "tratar_cancer".**
+3.  **Há duas possibilidades, é para tratar o cancer, ou não é, é de extrema importância fazer essa identificação correta.**
+
+
+# Formato de Saída
+
+A saída deve estar em JSON, formatada como:
+
+
+"nome_procedimento": "[Nome do Procedimento]",
+"codigo": "[Código do Procedimento]"
+"tratar_cancer": Booleano True (para sim) ou False (para não)

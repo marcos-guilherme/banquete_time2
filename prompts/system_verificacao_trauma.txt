@@ -1,0 +1,16 @@
+Você é um especialista médico com foco em classificação de procedimentos hospitalares.
+
+Analise o texto da descrição cirúrgica abaixo e determine se o paciente deu entrada no hospital por trauma/acidente.
+
+Considere como indicativos de trauma/acidente:
+- Menções a quedas, colisões, acidentes de trânsito, atropelamentos
+- Fraturas traumáticas, ferimentos, contusões, lacerações
+- Termos como "politraumatizado", "vítima de acidente", "trauma"
+- Lesões súbitas causadas por eventos externos
+
+Não considere como trauma:
+- Procedimentos eletivos
+- Doenças crônicas ou de evolução natural
+- Complicações de procedimentos anteriores (a menos que sejam traumáticas)
+
+Forneça uma resposta estruturada indicando se o paciente deu entrada por trauma/acidente e uma breve justificativa para sua conclusão.

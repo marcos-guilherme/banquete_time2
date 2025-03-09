@@ -1,29 +1,48 @@
 from typing import Optional, List
-
 from pydantic import BaseModel, Field
 
-
 class Procedimento(BaseModel):
-    """Informação sobre procedimentos médicos."""
+    """Modelo básico para um procedimento médico."""
+    procedimento: str = Field(description="Nome do procedimento identificado.")
+    descricao: str = Field(description=None)
+
+class ProcedimentoExtracao(BaseModel):
+    """Modelo ajustado para garantir que a extração sempre retorne uma lista de procedimentos."""
+    procedimentos_identificados: List[Procedimento] = Field(description="Lista de procedimentos extraídos do texto.")
+
     
-    name: Optional[str] = Field(default=None, description="Um procedimento é uma sequência estruturada de ações realizadas para alcançar um objetivo específico. No contexto cirúrgico, refere-se a uma intervenção médica que segue etapas definidas, como diérese, hemostasia, exérese e síntese, podendo envolver a remoção, reparação ou modificação de tecidos ou órgãos. A inclusão de procedimentos adicionais só ocorre quando suas etapas não estão contempladas em outro procedimento já realizado.")
+
+class Decodificacao(BaseModel):
+    """Modelo ajustado para garantir que a decodificação funcione diretamente com uma lista."""
+    nome_procedimentos: Procedimento = Field(description="Nome do procedimento decodificado. (O que tem a maior evidência dado os documentos)")
+    codigo_procedimentos: str = Field(description="O código do procedimento que foi identificado.")
+    tratar_cancer: bool = Field(description="Indica se cada procedimento tem como objetivo tratar o câncer atual do paciente")
     
+
+class IdentificacaoPecaAnatomica(BaseModel):
+    """Modelo simplificado para identificação de retirada de peça anatômica."""
+    retirada_peca_anatomica: bool = Field(description="Indica se houve retirada de peça anatômica do paciente.")
+    justificativa: str = Field(description="Justificativa para a conclusão, citando trechos relevantes do texto.")
     
-class ProcedimentosExtraidos(BaseModel):
-    """Lista de procedimentos médicos extraídos de um texto."""
+class ProcedimentoLaudoAnatomopatologico(BaseModel):
+    """Modelo para procedimentos extraídos de laudos anatomopatológicos."""
+    procedimento: str = Field(description="Nome do procedimento identificado no laudo.")
+    descricao: str = Field(description="Descrição do procedimento conforme o laudo.")
+    peca_anatomica: str = Field(description="Descrição da peça anatômica analisada.")
+
+class ExtratorLaudoAnatomopatologico(BaseModel):
+    """Modelo para a extração de informações de laudos anatomopatológicos."""
+    procedimentos_laudo: List[ProcedimentoLaudoAnatomopatologico] = Field(
+        description="Lista de procedimentos extraídos do laudo anatomopatológico."
+    )
     
-    procedimentos: List[Procedimento]
+class VerificacaoTrauma(BaseModel):
+    """Modelo para verificação de entrada por trauma/acidente."""
+    entrada_por_trauma: bool = Field(description="Indica se o paciente deu entrada por trauma/acidente")
+    justificativa: str = Field(description="Justificativa para a conclusão sobre entrada por trauma/acidente")
     
-class Indicio(BaseModel):
-    """Representa um indício encontrado no texto que reforça a identificação do procedimento."""
-    descricao: str
-    
-class ResumoProcedimento(BaseModel):
-    """Estrutura final para consolidar os procedimentos e indícios extraídos."""
-    #nome_procedimento: Optional[str] = Field(default=None, description="Nome principal do procedimento identificado")
-    procedimentos_identificados: List[Procedimento] = Field(description="Lista de procedimentos realizados")
-    indicios: List[Indicio] = Field(description="Lista de indícios encontrados no texto")
-    
-class decodificacao(BaseModel):
-    pass
-    
+
+class VerificacaoMesmaDoenca(BaseModel):
+    """Modelo para verificação se os procedimentos são para tratar a mesma doença."""
+    mesma_doenca: bool = Field(description="Indica se os procedimentos são para tratar a mesma doença")
+    justificativa: str = Field(description="Justificativa para a conclusão sobre mesma doença")
